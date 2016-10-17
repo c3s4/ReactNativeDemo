@@ -8,11 +8,14 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  TouchableHighlight,
+  TextInput,
   Text,
   View
 } from 'react-native';
 
 class ReactNativeDemo extends Component {
+
   render() {
     return (
       <View style={styles.container}>
@@ -21,17 +24,7 @@ class ReactNativeDemo extends Component {
             The Main Screen
           </Text>
         </View>
-        <View style={styles.elementsContainer}>
-          <View style={styles.elementsLeftColumn}>
-            <FileBox title="ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone ciaone " />
-            <FileBox />
-            <FileBox />
-          </View>
-          <View style={styles.elementsRightColumn}>
-            <FileBox />
-            <FileBox />
-          </View>
-        </View>
+        <GreetingsContainer />
       </View>
     );
   }
@@ -47,16 +40,47 @@ class Greetings extends Component {
   }
 }
 
-class FlexDimensionsBasics extends Component {
+class GreetingsContainer extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.state.gretingsList = [];
+  }
+
+  addGreeting(greetingText) {
+    console.log('a');
+    this.state.gretingsList.push('adsads');
+    this.setState({gretingsList: this.state.gretingsList});
+  }
+
   render() {
+    const leftCol = [];
+    const rightCol = [];
+    this.state.gretingsList.forEach((currentGreeting, index) => {
+      console.log('culo');
+      if ((index % 2) === 0) {
+        leftCol.push((<FileBox title={currentGreeting}/>));
+      } else {
+        rightCol.push((<FileBox title={currentGreeting}/>));
+      }
+    });
     return (
-      // Try removing the `flex: 1` on the parent View.
-      // The parent will not have dimensions, so the children can't expand.
-      // What if you add `height: 300` instead of `flex: 1`?
-      <View style={{flex: 1}}>
-        <View style={{ flex: 1, backgroundColor: 'powderblue' }} />
-        <View style={{ flex: 2, backgroundColor: 'skyblue' }} />
-        <View style={{ flex: 3, backgroundColor: 'steelblue' }} />
+      <View>
+        <View style={styles.addingView}>
+          <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}} />
+          <TouchableHighlight style={styles.button} onPress={this.addGreeting.bind(this)}>
+            <Text style={styles.buttonText}> + </Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.elementsContainer}>
+          <View style={styles.elementsLeftColumn}>
+            {leftCol}
+          </View>
+          <View style={styles.elementsRightColumn}>
+            {rightCol}
+          </View>
+        </View>
       </View>
     );
   }
@@ -88,6 +112,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#555555',
     padding: 20
   },
+  button: {
+    padding:5,
+    width: 100,
+    maxHeight: 50,
+    backgroundColor: '#555555',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  buttonText: {
+    fontSize: 24,
+    color: '#F5FCFF'
+  },
   elementsContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -105,6 +141,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginRight: 5,
     marginTop: 5
+  },
+  addingView: {
+    flexDirection: 'row',
+    height: 60
   },
   fileBox: {
     minHeight: 80,
