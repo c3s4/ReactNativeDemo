@@ -11,6 +11,7 @@ import {
   TouchableHighlight,
   TextInput,
   Text,
+  ScrollView,
   View
 } from 'react-native';
 
@@ -65,13 +66,14 @@ class GreetingsContainer extends Component {
       }
     });
     return (
-      <View>
+      <View style={{flex:1}}>
         <View style={styles.addingView}>
           <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}} />
           <TouchableHighlight style={styles.button} onPress={this.addGreeting.bind(this)}>
             <Text style={styles.buttonText}> + </Text>
           </TouchableHighlight>
         </View>
+        <ScrollView>
         <View style={styles.elementsContainer}>
           <View style={styles.elementsLeftColumn}>
             {leftCol}
@@ -80,6 +82,7 @@ class GreetingsContainer extends Component {
             {rightCol}
           </View>
         </View>
+        </ScrollView>
       </View>
     );
   }
@@ -103,7 +106,6 @@ class FileBox extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
     justifyContent: 'center',
     backgroundColor: '#F5FCFF'
   },
