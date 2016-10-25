@@ -58,11 +58,10 @@ class GreetingsContainer extends Component {
     const leftCol = [];
     const rightCol = [];
     this.state.gretingsList.forEach((currentGreeting, index) => {
-      console.log('culo');
       if ((index % 2) === 0) {
-        leftCol.push((<FileBox title={currentGreeting}/>));
+        leftCol.push((<FileBox key={index} title={currentGreeting}/>));
       } else {
-        rightCol.push((<FileBox title={currentGreeting}/>));
+        rightCol.push((<FileBox key={index} title={currentGreeting}/>));
       }
     });
     return (
