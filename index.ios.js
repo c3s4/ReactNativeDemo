@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   TextInput,
+  ListView,
   Text,
   ScrollView,
   View
@@ -45,44 +46,56 @@ class GreetingsContainer extends Component {
 
   constructor(props) {
     super(props);
+    const dataSource = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2});
     this.state = {};
-    this.state.gretingsList = [];
+    this.gretingsList = [];
+    this.state.dataSource = dataSource.cloneWithRows([]);
   }
 
   addGreeting(greetingText) {
-    console.log('a');
-    this.state.gretingsList.push('adsads');
-    this.setState({gretingsList: this.state.gretingsList});
+    this.gretingsList.push(Math.random());
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(this.gretingsList)
+    });
+  }
+
+  addRemoteGreeting() {
+    fetch('http://localhost:8888', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((jsonResponse) => {
+      var tmp = this.gretingsList.slice();
+      this.gretingsList = [].concat(jsonResponse.a, tmp);
+      this.gretingsList;
+      console.log(this.gretingsList);
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(this.gretingsList)
+      });
+    });
+
   }
 
   render() {
-    const leftCol = [];
-    const rightCol = [];
-    this.state.gretingsList.forEach((currentGreeting, index) => {
-      if ((index % 2) === 0) {
-        leftCol.push((<FileBox key={index} title={currentGreeting}/>));
-      } else {
-        rightCol.push((<FileBox key={index} title={currentGreeting}/>));
-      }
-    });
     return (
       <View style={{flex:1}}>
         <View style={styles.addingView}>
           <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}} />
-          <TouchableHighlight style={styles.button} onPress={this.addGreeting.bind(this)}>
+          <TouchableHighlight style={styles.button} onPress={this.addRemoteGreeting.bind(this)}>
             <Text style={styles.buttonText}> + </Text>
           </TouchableHighlight>
         </View>
-        <ScrollView>
-        <View style={styles.elementsContainer}>
-          <View style={styles.elementsLeftColumn}>
-            {leftCol}
-          </View>
-          <View style={styles.elementsRightColumn}>
-            {rightCol}
-          </View>
-        </View>
-        </ScrollView>
+        <ListView
+          style={styles.elementsContainer}
+          dataSource={this.state.dataSource}
+          renderRow={(rowData) => <FileBox title={rowData}/>}
+        />
       </View>
     );
   }
@@ -126,9 +139,7 @@ const styles = StyleSheet.create({
     color: '#F5FCFF'
   },
   elementsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around'
+    flex: 1
   },
   elementsLeftColumn: {
     flex: 1,
